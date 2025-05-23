@@ -1,22 +1,26 @@
 from django.db import models
+from django.contrib.auth.models import  AbstractUser
 
 
-class Customers(models.Model):
-    username = models.CharField(max_length=50)
-    password_hash = models.CharField(max_length=128)
+CUSTOMER, ADMIN = 'customer', 'admin'
+user_type = [(CUSTOMER, 'Customer'), (ADMIN, 'Admin')]
+
+
+class User(AbstractUser):
+    phone = models.CharField(max_length=100, null=True)
+
+    def is_admin(self):
+        return self.groups.filter(name='admin').exists()
     
-    full_name = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
-    phone = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField()
+    def is_customer(self):
+        return self.groups.filter(name='customer').exists()
     
     class Meta:
-        db_table = 'customers'
+        db_table = 'users'
 
 
 class CustomerAddressHome(models.Model):
-    customer = models.ForeignKey(Customers, on_delete=models.CASCADE)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
     recipient_name = models.CharField(max_length=100, null=False)
     phone = models.CharField(max_length=100)
     address = models.TextField()
@@ -24,13 +28,3 @@ class CustomerAddressHome(models.Model):
     
     class Meta:
         db_table = 'customer_address_home'
-    
-    
-class Admins(models.Model):
-    username = models.CharField(max_length=50)
-    password_hash = models.CharField(max_length=128)
-    created_at = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField()
-    
-    class Meta:
-        db_table = 'admins'

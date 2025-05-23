@@ -1,5 +1,5 @@
-from .users import Customers, CustomerAddressHome, Admins
+from .users import User, CustomerAddressHome, User
 
-from .products import Categories, Products, ProductVariants, ProductOptions, ProductValues, VariantValueMap
+from .products import Category, Product, ProductVariant, ProductOption, ProductValue, VariantValueMap
 
-from .orders import PaymentMethods, Orders, OrderItems, ShippingMethods, OrderAddressHome, OrderShippings
+from .orders import PaymentMethod, Order, OrderItem, ShippingMethod, OrderAddressHome, OrderShipping

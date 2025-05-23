@@ -16,7 +16,7 @@ class Customers(models.Model):
 
 
 class CustomerAddressHome(models.Model):
-    customer_id = models.ForeignKey(Customers, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customers, on_delete=models.CASCADE)
     recipient_name = models.CharField(max_length=100, null=False)
     phone = models.CharField(max_length=100)
     address = models.TextField()

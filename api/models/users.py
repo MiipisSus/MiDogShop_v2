@@ -8,12 +8,9 @@ user_type = [(CUSTOMER, 'Customer'), (ADMIN, 'Admin')]
 
 class User(AbstractUser):
     phone = models.CharField(max_length=100, null=True)
-
-    def is_admin(self):
-        return self.groups.filter(name='admin').exists()
     
     def is_customer(self):
-        return self.groups.filter(name='customer').exists()
+        return self.groups.filter(name='Customer').exists()
     
     class Meta:
         db_table = 'users'

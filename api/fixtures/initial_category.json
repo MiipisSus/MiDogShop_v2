@@ -1,0 +1,74 @@
+[
+  {
+    "model": "api.category",
+    "pk": 1,
+    "fields": {
+      "name": "飼料",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 2,
+    "fields": {
+      "name": "零食",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 4,
+    "fields": {
+      "name": "罐罐",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 5,
+    "fields": {
+      "name": "保健食品",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 6,
+    "fields": {
+      "name": "美容用品",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 7,
+    "fields": {
+      "name": "居家用品",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 8,
+    "fields": {
+      "name": "外出用品",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 9,
+    "fields": {
+      "name": "廁所用品",
+      "parent_id": null
+    }
+  },
+  {
+    "model": "api.category",
+    "pk": 10,
+    "fields": {
+      "name": "玩具",
+      "parent_id": null
+    }
+  }
+]

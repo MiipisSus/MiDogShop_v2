@@ -9,11 +9,19 @@ class Category(models.Model):
         db_table = 'categories'
 
 
+DOG, CAT, GENERAL = 'DOG', 'CAT', 'GENERAL'
+usage_type = [
+    (DOG, '狗'),
+    (CAT, '貓'),
+    (GENERAL, '通用'),
+]
+
 class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     base_price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    usage_type = models.CharField(max_length=50, choices=usage_type, default=usage_type[2])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

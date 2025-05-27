@@ -16,29 +16,20 @@ usage_type = [
     (GENERAL, '通用'),
 ]
 
+
 class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     base_price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    usage_type = models.CharField(max_length=50, choices=usage_type, default=usage_type[2])
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, null=True)
+    usage_type = models.CharField(
+        max_length=50, choices=usage_type, default=usage_type[2])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'products'
-
-
-class ProductVariant(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    sku = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'product_variants'
 
 
 class ProductOption(models.Model):
@@ -54,12 +45,16 @@ class ProductValue(models.Model):
 
     class Meta:
         db_table = 'product_values'
-
-
-class VariantValueMap(models.Model):
-    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
-    value_id = models.ForeignKey(ProductValue, on_delete=models.CASCADE)
+        
+        
+class ProductVariant(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    sku = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    stock = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    value = models.ForeignKey(ProductValue, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'variant_value_map'
-
+        db_table = 'product_variants'

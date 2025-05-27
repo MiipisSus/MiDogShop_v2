@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'drf_yasg',
+    'drf_spectacular',
     'api',
 ]
 
@@ -130,3 +131,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Define custom user model
 AUTH_USER_MODEL = 'api.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'MiDogShop API',
+    'DESCRIPTION': '購物網站（開發中）',
+    'VERSION': '2.0.0',
+    'CONTACT': {
+        "name": "Mango",
+        "url": "contact@example.com",
+    },
+    'LICENSE': {
+        "name": "MIT License",
+        "url": "https://choosealicense.com/licenses/mit/",
+    },
+}

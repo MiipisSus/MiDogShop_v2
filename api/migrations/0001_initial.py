@@ -20,7 +20,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrderAddressHome',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('recipient_name', models.CharField(max_length=100)),
                 ('phone', models.CharField(max_length=100)),
                 ('address', models.TextField()),
@@ -30,7 +31,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PaymentMethods',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
                 ('display_name', models.CharField(max_length=100)),
             ],
@@ -41,7 +43,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductOptions',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
             ],
             options={
@@ -51,7 +54,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ShippingMethods',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
                 ('display_name', models.CharField(max_length=100)),
             ],
@@ -59,20 +63,33 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='User',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
-                ('first_name', models.CharField(blank=True, max_length=150, verbose_name='first name')),
-                ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
-                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
-                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
-                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
-                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('password', models.CharField(
+                    max_length=128, verbose_name='password')),
+                ('last_login', models.DateTimeField(
+                    blank=True, null=True, verbose_name='last login')),
+                ('is_superuser', models.BooleanField(default=False,
+                 help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.',
+                 max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
+                ('first_name', models.CharField(blank=True,
+                 max_length=150, verbose_name='first name')),
+                ('last_name', models.CharField(blank=True,
+                 max_length=150, verbose_name='last name')),
+                ('email', models.EmailField(blank=True,
+                 max_length=254, verbose_name='email address')),
+                ('is_staff', models.BooleanField(default=False,
+                 help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
+                ('is_active', models.BooleanField(
+                    default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
+                ('date_joined', models.DateTimeField(
+                    default=django.utils.timezone.now, verbose_name='date joined')),
                 ('phone', models.CharField(max_length=100)),
-                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
-                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
+                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+                 related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
+                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.',
+                 related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
             ],
             options={
                 'db_table': 'users',
@@ -84,9 +101,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Categories',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
-                ('parent', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.categories')),
+                ('parent', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to='api.categories')),
             ],
             options={
                 'db_table': 'categories',
@@ -95,12 +114,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CustomerAddressHome',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('recipient_name', models.CharField(max_length=100)),
                 ('phone', models.CharField(max_length=100)),
                 ('address', models.TextField()),
                 ('zip_code', models.CharField(max_length=6)),
-                ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('customer', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'db_table': 'customer_address_home',
@@ -109,14 +130,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Orders',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('order_number', models.CharField(max_length=100, unique=True)),
-                ('total_price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('status', models.CharField(choices=[('PENDING', 'pending'), ('PAID', 'paid'), ('SHIPPED', 'shipped'), ('ARRIVED', 'arrived'), ('COMPLETED', 'completed'), ('CANCELED', 'canceled')], default=('PENDING', 'pending'), max_length=50)),
+                ('total_price', models.DecimalField(
+                    decimal_places=2, max_digits=10)),
+                ('status', models.CharField(choices=[('PENDING', 'pending'), ('PAID', 'paid'), ('SHIPPED', 'shipped'), (
+                    'ARRIVED', 'arrived'), ('COMPLETED', 'completed'), ('CANCELED', 'canceled')], default=('PENDING', 'pending'), max_length=50)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('payment_method', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.paymentmethods')),
+                ('customer', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('payment_method', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.paymentmethods')),
             ],
             options={
                 'db_table': 'orders',
@@ -125,13 +151,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Products',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
                 ('description', models.TextField()),
-                ('base_price', models.DecimalField(decimal_places=2, max_digits=10)),
+                ('base_price', models.DecimalField(
+                    decimal_places=2, max_digits=10)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('category', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.categories')),
+                ('category', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.categories')),
             ],
             options={
                 'db_table': 'products',
@@ -140,9 +169,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductValues',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('value', models.CharField(max_length=50)),
-                ('option', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.productoptions')),
+                ('option', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='api.productoptions')),
             ],
             options={
                 'db_table': 'product_values',
@@ -151,13 +182,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductVariants',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('sku', models.CharField(max_length=100)),
                 ('price', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('stock', models.IntegerField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.products')),
+                ('product', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='api.products')),
             ],
             options={
                 'db_table': 'product_variants',
@@ -166,12 +199,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrderItems',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.IntegerField()),
                 ('price', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('sub_total', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.orders')),
-                ('product_variant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.productvariants')),
+                ('order', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='api.orders')),
+                ('product_variant', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='api.productvariants')),
             ],
             options={
                 'db_table': 'order_items',
@@ -180,20 +216,27 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrderShippings',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('tracking_number', models.CharField(max_length=100)),
                 ('customer_message', models.TextField()),
-                ('address_home', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.orderaddresshome')),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.orders')),
-                ('shipping_method', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.shippingmethods')),
+                ('address_home', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.orderaddresshome')),
+                ('order', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='api.orders')),
+                ('shipping_method', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.shippingmethods')),
             ],
         ),
         migrations.CreateModel(
             name='VariantValueMap',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('value_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.productvalues')),
-                ('variant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.productvariants')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('value_id', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='api.productvalues')),
+                ('variant', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='api.productvariants')),
             ],
             options={
                 'db_table': 'variant_value_map',

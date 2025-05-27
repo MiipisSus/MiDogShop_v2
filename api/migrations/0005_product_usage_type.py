@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='product',
             name='usage_type',
-            field=models.CharField(choices=[('DOG', '狗'), ('CAT', '貓'), ('GENERAL', '通用')], default=('GENERAL', '通用'), max_length=50),
+            field=models.CharField(choices=[('DOG', '狗'), ('CAT', '貓'), ('GENERAL', '通用')], default=(
+                'GENERAL', '通用'), max_length=50),
         ),
     ]

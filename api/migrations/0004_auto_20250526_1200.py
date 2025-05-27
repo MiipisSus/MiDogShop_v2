@@ -21,13 +21,14 @@ def create_groups(apps, schema_editor):
         Q(codename__icontains='category')
     )
     manager.permissions.set(manager_perms)
-    
+
+
 def create_category(apps, schema_editor):
     Category = apps.get_model('api', 'Category')
     for name in ['飼料', '零食', '罐罐', '保健食品', '美容用品', '居家用品', '外出用品', '廁所用品', '玩具']:
         Category.objects.get_or_create(name=name)
-        
-    
+
+
 class Migration(migrations.Migration):
 
     dependencies = [

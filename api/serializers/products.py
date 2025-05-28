@@ -8,14 +8,6 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
         
-        
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'
-        
-        read_only_fields = ['created_at', 'updated_at']
-        
 
 class ProductOptionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,24 +16,31 @@ class ProductOptionSerializer(serializers.ModelSerializer):
         
 
 class ProductValueSerializer(serializers.ModelSerializer):
-    option = ProductOptionSerializer()
+    option_id = serializers.PrimaryKeyRelatedField(
+        queryset=ProductOption.objects.all(), source='option', write_only=True
+    )
+    option = ProductOptionSerializer(read_only=True)
     class Meta:
         model = ProductValue
         fields = '__all__'
         
         
 class ProductVariantSerializer(serializers.ModelSerializer):
-    value_id = serializers.IntegerField(source='value', write_only=True)
-    value = ProductValueSerializer(read_only=True)
+    value_ids = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=ProductValue.objects.all(), source='values', write_only=True
+    )
+    values = ProductValueSerializer(many=True, read_only=True)
     class Meta:
         model = ProductVariant
         fields = '__all__'
         
         read_only_fields = ['created_at', 'updated_at']
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    variants = ProductVariantSerializer(many=True, read_only=True)
+    class Meta:
+        model = Product
+        fields = '__all__'
         
-    def create(self, validated_data):
-        return super().create(validated_data)
-    
-    # FIXME: 1. The value_id and value doesn't show properly on the docs
-    #        2. The create/update method should input option/value to create ProductValue as well
-    #        3. The list method shows 404 NOT FOUND, not 200 OK
+        read_only_fields = ['created_at', 'updated_at']

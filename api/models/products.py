@@ -3,6 +3,7 @@ from django.db import models
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
+    display_name = models.CharField(max_length=100)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
     class Meta:
@@ -34,6 +35,7 @@ class Product(models.Model):
 
 class ProductOption(models.Model):
     name = models.CharField(max_length=50)
+    display_name = models.CharField(max_length=100)
 
     class Meta:
         db_table = 'product_options'
@@ -48,13 +50,13 @@ class ProductValue(models.Model):
         
         
 class ProductVariant(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
     sku = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    value = models.ForeignKey(ProductValue, on_delete=models.CASCADE)
+    values = models.ManyToManyField('ProductValue', related_name='variants')
 
     class Meta:
         db_table = 'product_variants'

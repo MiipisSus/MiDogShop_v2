@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from api.models import User, CustomerAddressHome
 from api.serializers.users import UserSerializer, CustomerAddressHomeSerializer
@@ -14,7 +15,7 @@ class UserViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return User.objects.all()
+            return super().get_queryset()
         return super().get_queryset().filter(groups__name='Customer')
 
     def get_permissions(self):
@@ -23,9 +24,29 @@ class UserViewSet(ModelViewSet):
         elif self.action == 'retrieve':
             return [IsAuthenticated()]
         return super().get_permissions()
+    
+    @extend_schema(
+        summary="新增使用者（無須權限）"
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
-    @action(detail=False, methods=['get', 'patch', 'put', 'delete'],
-            url_path='me', permission_classes=[IsAuthenticated])
+    @extend_schema(
+        methods=['DELETE'],
+        summary="刪除目前使用者資料"
+    )
+    @extend_schema(
+        methods=['PATCH', 'PUT'],
+        summary="更新目前使用者資料"
+    )
+    @extend_schema(
+        methods=['GET'],
+        summary="取得目前使用者資料"
+    )
+    @action(
+        detail=False, methods=['get', 'patch', 'put', 'delete'],
+        url_path='me', permission_classes=[IsAuthenticated]
+    )
     def me(self, request):
         user = request.user
         self.kwargs[self.lookup_field] = user.pk

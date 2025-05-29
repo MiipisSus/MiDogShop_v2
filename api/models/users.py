@@ -7,6 +7,7 @@ user_type = [(CUSTOMER, 'Customer'), (ADMIN, 'Admin')]
 
 
 class User(AbstractUser):
+    email = models.EmailField(null=True, blank=True, unique=True)
     phone = models.CharField(max_length=100, null=True)
 
     def is_customer(self):

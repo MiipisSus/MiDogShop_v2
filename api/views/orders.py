@@ -5,21 +5,22 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from api.models import Order, OrderItem, OrderShipping, OrderAddressHome, ShippingMethod, PaymentMethod
 from api.serializers import ShippingMethodSerializer, PaymentMethodSerializer, OrderSerializer, OrderItemSerializer, OrderShippingSerializer, \
     OrderAddressHomeSerializer
+from api.permissions import IsStaff, IsManager
 from api.common import PERMMISIONS_DOCS
 
 
 @extend_schema_view(
     list=extend_schema(summary=f"取得所有運送方式 {PERMMISIONS_DOCS.IsAuthenticated}"),
     retrieve=extend_schema(summary=f"取得運送方式 {PERMMISIONS_DOCS.IsAuthenticated}"),
-    create=extend_schema(summary=f"新增運送方式 {PERMMISIONS_DOCS.IsAdminUser}"),
-    update=extend_schema(summary=f"更新運送方式 {PERMMISIONS_DOCS.IsAdminUser}"),
-    partial_update=extend_schema(summary=f"更新運送方式 {PERMMISIONS_DOCS.IsAdminUser}"),
-    destroy=extend_schema(summary=f"刪除運送方式 {PERMMISIONS_DOCS.IsAdminUser}")
+    create=extend_schema(summary=f"新增運送方式 {PERMMISIONS_DOCS.IsManager}"),
+    update=extend_schema(summary=f"更新運送方式 {PERMMISIONS_DOCS.IsManager}"),
+    partial_update=extend_schema(summary=f"更新運送方式 {PERMMISIONS_DOCS.IsManager}"),
+    destroy=extend_schema(summary=f"刪除運送方式 {PERMMISIONS_DOCS.IsManager}")
 )
 class ShippingMethodViewSet(ModelViewSet):
     queryset = ShippingMethod.objects.all()
     serializer_class = ShippingMethodSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsManager]
     
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:
@@ -30,15 +31,15 @@ class ShippingMethodViewSet(ModelViewSet):
 @extend_schema_view(
     list=extend_schema(summary=f"取得所有付款方式 {PERMMISIONS_DOCS.IsAuthenticated}"),
     retrieve=extend_schema(summary=f"取得付款方式 {PERMMISIONS_DOCS.IsAuthenticated}"),
-    create=extend_schema(summary=f"新增付款方式 {PERMMISIONS_DOCS.IsAdminUser}"),
-    update=extend_schema(summary=f"更新付款方式 {PERMMISIONS_DOCS.IsAdminUser}"),
-    partial_update=extend_schema(summary=f"更新付款方式 {PERMMISIONS_DOCS.IsAdminUser}"),
-    destroy=extend_schema(summary=f"刪除付款方式 {PERMMISIONS_DOCS.IsAdminUser}")
+    create=extend_schema(summary=f"新增付款方式 {PERMMISIONS_DOCS.IsManager}"),
+    update=extend_schema(summary=f"更新付款方式 {PERMMISIONS_DOCS.IsManager}"),
+    partial_update=extend_schema(summary=f"更新付款方式 {PERMMISIONS_DOCS.IsManager}"),
+    destroy=extend_schema(summary=f"刪除付款方式 {PERMMISIONS_DOCS.IsManager}")
 )
 class PaymentMethodViewSet(ModelViewSet):
     queryset = PaymentMethod.objects.all()
     serializer_class = PaymentMethodSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsManager]
     
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:
@@ -50,14 +51,14 @@ class PaymentMethodViewSet(ModelViewSet):
     list=extend_schema(summary=f"取得所有訂單 {PERMMISIONS_DOCS.IsAuthenticated}"),
     retrieve=extend_schema(summary=f"取得訂單 {PERMMISIONS_DOCS.IsAuthenticated}"),
     create=extend_schema(summary=f"新增訂單 {PERMMISIONS_DOCS.IsAuthenticated}"),
-    update=extend_schema(summary=f"更新訂單 {PERMMISIONS_DOCS.IsAdminUser}"),
-    partial_update=extend_schema(summary=f"更新訂單 {PERMMISIONS_DOCS.IsAdminUser}"),
-    destroy=extend_schema(summary=f"刪除訂單 {PERMMISIONS_DOCS.IsAdminUser}")
+    update=extend_schema(summary=f"更新訂單 {PERMMISIONS_DOCS.IsStaff}"),
+    partial_update=extend_schema(summary=f"更新訂單 {PERMMISIONS_DOCS.IsStaff}"),
+    destroy=extend_schema(summary=f"刪除訂單 {PERMMISIONS_DOCS.IsStaff}")
 )
 class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsStaff]
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -66,23 +67,23 @@ class OrderViewSet(ModelViewSet):
         return queryset.filter(customer=self.request.user)
     
     def get_permissions(self):
-        if self.action in ('patch', 'put', 'destroy'):
-            return [IsAdminUser()]
-        return super().get_permissions()
+            if self.request.method in (*SAFE_METHODS, 'POST'):
+                return [IsAuthenticated()]
+            return super().get_permissions()
     
 
 @extend_schema_view(
     list=extend_schema(summary=f"取得所有訂單項目 {PERMMISIONS_DOCS.IsAuthenticated}"),
     retrieve=extend_schema(summary=f"取得訂單項目 {PERMMISIONS_DOCS.IsAuthenticated}"),
     create=extend_schema(summary=f"新增訂單項目 {PERMMISIONS_DOCS.IsAuthenticated}"),
-    update=extend_schema(summary=f"更新訂單項目 {PERMMISIONS_DOCS.IsAdminUser}"),
-    partial_update=extend_schema(summary=f"更新訂單項目 {PERMMISIONS_DOCS.IsAdminUser}"),
-    destroy=extend_schema(summary=f"刪除訂單項目 {PERMMISIONS_DOCS.IsAdminUser}")
+    update=extend_schema(summary=f"更新訂單項目 {PERMMISIONS_DOCS.IsStaff}"),
+    partial_update=extend_schema(summary=f"更新訂單項目 {PERMMISIONS_DOCS.IsStaff}"),
+    destroy=extend_schema(summary=f"刪除訂單項目 {PERMMISIONS_DOCS.IsStaff}")
 )
 class OrderItemViewSet(ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsStaff]
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -91,23 +92,23 @@ class OrderItemViewSet(ModelViewSet):
         return queryset.filter(order__customer=self.request.user)
     
     def get_permissions(self):
-        if self.action in ('patch', 'put', 'destroy'):
-            return [IsAdminUser()]
-        return super().get_permissions()
+            if self.request.method in (*SAFE_METHODS, 'POST'):
+                return [IsAuthenticated()]
+            return super().get_permissions()
     
 
 @extend_schema_view(
     list=extend_schema(summary=f"取得所有訂單運送方式 {PERMMISIONS_DOCS.IsAuthenticated}"),
     retrieve=extend_schema(summary=f"取得訂單運送方式 {PERMMISIONS_DOCS.IsAuthenticated}"),
     create=extend_schema(summary=f"新增訂單運送方式 {PERMMISIONS_DOCS.IsAuthenticated}"),
-    update=extend_schema(summary=f"更新訂單運送方式 {PERMMISIONS_DOCS.IsAdminUser}"),
-    partial_update=extend_schema(summary=f"更新訂單運送方式 {PERMMISIONS_DOCS.IsAdminUser}"),
-    destroy=extend_schema(summary=f"刪除訂單運送方式 {PERMMISIONS_DOCS.IsAdminUser}")
+    update=extend_schema(summary=f"更新訂單運送方式 {PERMMISIONS_DOCS.IsStaff}"),
+    partial_update=extend_schema(summary=f"更新訂單運送方式 {PERMMISIONS_DOCS.IsStaff}"),
+    destroy=extend_schema(summary=f"刪除訂單運送方式 {PERMMISIONS_DOCS.IsStaff}")
 )
 class OrderShippingViewSet(ModelViewSet):
     queryset = OrderShipping.objects.all()
     serializer_class = OrderShippingSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsStaff]
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -116,23 +117,23 @@ class OrderShippingViewSet(ModelViewSet):
         return queryset.filter(order__customer=self.request.user)
     
     def get_permissions(self):
-        if self.action in ('patch', 'put', 'destroy'):
-            return [IsAdminUser()]
-        return super().get_permissions()
+            if self.request.method in (*SAFE_METHODS, 'POST'):
+                return [IsAuthenticated()]
+            return super().get_permissions()
 
 
 @extend_schema_view(
     list=extend_schema(summary=f"取得所有訂單地址 {PERMMISIONS_DOCS.IsAuthenticated}"),
     retrieve=extend_schema(summary=f"取得訂單地址 {PERMMISIONS_DOCS.IsAuthenticated}"),
     create=extend_schema(summary=f"新增訂單地址 {PERMMISIONS_DOCS.IsAuthenticated}"),
-    update=extend_schema(summary=f"更新訂單地址 {PERMMISIONS_DOCS.IsAdminUser}"),
-    partial_update=extend_schema(summary=f"更新訂單地址 {PERMMISIONS_DOCS.IsAdminUser}"),
-    destroy=extend_schema(summary=f"刪除訂單地址 {PERMMISIONS_DOCS.IsAdminUser}")
+    update=extend_schema(summary=f"更新訂單地址 {PERMMISIONS_DOCS.IsStaff}"),
+    partial_update=extend_schema(summary=f"更新訂單地址 {PERMMISIONS_DOCS.IsStaff}"),
+    destroy=extend_schema(summary=f"刪除訂單地址 {PERMMISIONS_DOCS.IsStaff}")
 )
 class OrderAddressHomeViewSet(ModelViewSet):
     queryset = OrderAddressHome.objects.all()
     serializer_class = OrderAddressHomeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsStaff]
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -141,6 +142,6 @@ class OrderAddressHomeViewSet(ModelViewSet):
         return queryset.filter(order__customer=self.request.user)
     
     def get_permissions(self):
-        if self.action in ('patch', 'put'):
-            return [IsAdminUser()]
+        if self.request.method in (*SAFE_METHODS, 'POST'):
+            return [IsAuthenticated()]
         return super().get_permissions()

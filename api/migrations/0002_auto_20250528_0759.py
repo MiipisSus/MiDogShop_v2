@@ -18,7 +18,9 @@ def create_groups(apps, schema_editor):
     manager_perms = Permission.objects.filter(
         Q(codename__icontains='order') |
         Q(codename__icontains='product') |
-        Q(codename__icontains='category')
+        Q(codename__icontains='category') |
+        Q(codename__icontains='shipping') |
+        Q(codename__icontains='payment')
     )
     manager.permissions.set(manager_perms)
 

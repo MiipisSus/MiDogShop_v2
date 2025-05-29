@@ -12,16 +12,12 @@ def check_object_owner(obj, user):
         return False
 
 
-class IsOwner(BasePermission):
-    """
-    只允許物件的擁有者編輯它
-    """
-    def has_object_permission(self, request, view, obj):
-        # Add any model check if needed
-        return check_object_owner(obj, request.user)
-
-
 class IsAdminUserOrOwner(BasePermission):
+    """
+    GET: Any authenticated user\n
+    POST: Only staff user\n
+    PATCH, PUT, DELETE: Only staff user or the owner
+    """
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return bool(request.user and request.user.is_authenticated)

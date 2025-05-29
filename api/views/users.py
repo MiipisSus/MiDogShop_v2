@@ -6,8 +6,17 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from api.models import User, CustomerAddressHome
 from api.serializers.users import UserSerializer, CustomerAddressHomeSerializer
 from api.permissions import IsAdminUserOrOwner
+from api.common import PERMMISIONS_DOCS
 
 
+@extend_schema_view(
+    list=extend_schema(summary=f"取得使用者清單 {PERMMISIONS_DOCS.IsAuthenticated}"),
+    create=extend_schema(summary=f"新增使用者 {PERMMISIONS_DOCS.NoAuth}"),
+    retrieve=extend_schema(summary=f"取得使用者資料 {PERMMISIONS_DOCS.IsAuthenticated}"),
+    update=extend_schema(summary=f"更新使用者資料 {PERMMISIONS_DOCS.IsAdminUserOrOwner}"),
+    partial_update=extend_schema(summary=f"更新使用者資料 {PERMMISIONS_DOCS.IsAdminUserOrOwner}"),
+    destroy=extend_schema(summary=f"刪除使用者資料 {PERMMISIONS_DOCS.IsAdminUserOrOwner}"),
+)
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -24,24 +33,18 @@ class UserViewSet(ModelViewSet):
         elif self.action == 'retrieve':
             return [IsAuthenticated()]
         return super().get_permissions()
-    
-    @extend_schema(
-        summary="新增使用者（無須權限）"
-    )
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
 
     @extend_schema(
         methods=['DELETE'],
-        summary="刪除目前使用者資料"
+        summary=f"刪除目前使用者資料 {PERMMISIONS_DOCS.IsAuthenticated}"
     )
     @extend_schema(
         methods=['PATCH', 'PUT'],
-        summary="更新目前使用者資料"
+        summary=f"更新目前使用者資料 {PERMMISIONS_DOCS.IsAuthenticated}"
     )
     @extend_schema(
         methods=['GET'],
-        summary="取得目前使用者資料"
+        summary=f"取得目前使用者資料 {PERMMISIONS_DOCS.IsAuthenticated}"
     )
     @action(
         detail=False, methods=['get', 'patch', 'put', 'delete'],
@@ -59,6 +62,14 @@ class UserViewSet(ModelViewSet):
             return self.destroy(request)
 
 
+@extend_schema_view(
+    list=extend_schema(summary=f"取得使用者地址清單 {PERMMISIONS_DOCS.IsAuthenticated}"),
+    create=extend_schema(summary=f"新增使用者地址 {PERMMISIONS_DOCS.IsAdminUser}"),
+    retrieve=extend_schema(summary=f"取得使用者地址資料 {PERMMISIONS_DOCS.IsAuthenticated}"),
+    update=extend_schema(summary=f"更新使用者地址資料 {PERMMISIONS_DOCS.IsAdminUserOrOwner}"),
+    partial_update=extend_schema(summary=f"更新使用者地址資料 {PERMMISIONS_DOCS.IsAdminUserOrOwner}"),
+    destroy=extend_schema(summary=f"刪除使用者地址資料 {PERMMISIONS_DOCS.IsAdminUserOrOwner}"),
+)
 class CustomerAddressHomeViewSet(ModelViewSet):
     queryset = CustomerAddressHome.objects.all()
     serializer_class = CustomerAddressHomeSerializer

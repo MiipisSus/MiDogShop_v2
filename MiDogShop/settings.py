@@ -147,5 +147,5 @@ SPECTACULAR_SETTINGS = {
     'LICENSE': {
         "name": "MIT License",
         "url": "https://choosealicense.com/licenses/mit/",
-    },
+    }
 }

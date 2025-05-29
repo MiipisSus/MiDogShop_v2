@@ -28,3 +28,25 @@ class IsAdminUserOrOwner(BasePermission):
             return True
     def has_object_permission(self, request, view, obj):
         return bool(request.user and (request.user.is_staff or check_object_owner(obj, request.user)))
+
+
+class IsStaff(BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        return (
+            user and user.is_authenticated and (
+                user.is_superuser or
+                user.groups.filter(name__in=['Staff', 'Manager']).exists()
+            )
+        )
+
+
+class IsManager(BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        return (
+            user and user.is_authenticated and (
+                user.is_superuser or
+                user.groups.filter(name='Manager').exists()
+            )
+        )

@@ -4,6 +4,18 @@ from api.models import Category, Product, ProductVariant, ProductOption, Product
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    parent_id = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(), source='parent', required=False, write_only=True
+    )
+    parent = serializers.SerializerMethodField(read_only=True)
+    children = serializers.SerializerMethodField()
+    
+    def get_parent(self, obj):
+        return {'id': obj.parent.id, 'name': obj.parent.name} if obj.parent else None
+        
+    def get_children(self, obj):
+        return [{'id': child.id, 'name': child.name} for child in obj.children.all()]
+    
     class Meta:
         model = Category
         fields = '__all__'

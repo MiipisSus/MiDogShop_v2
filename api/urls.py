@@ -17,7 +17,7 @@ router.register('product-options', ProductOptionViewSet)
 
 router.register('shipping-methods', ShippingMethodViewSet)
 router.register('payment-methods', PaymentMethodViewSet)
-router.register('order', OrderViewSet)
+router.register('orders', OrderViewSet)
 router.register('order-items', OrderItemViewSet)
 router.register('order-shipping', OrderShippingViewSet)
 router.register('order-address-home', OrderAddressHomeViewSet)

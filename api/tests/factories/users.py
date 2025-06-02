@@ -31,8 +31,8 @@ class UserFactory(DjangoModelFactory):
             return
         
         if extracted:
-            for group in extracted:
-                self.groups.add(group)
+            group = Group.objects.get(name=extracted)
+            self.groups.add(group)
                 
 
 class GroupFactory(DjangoModelFactory):

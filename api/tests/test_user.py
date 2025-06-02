@@ -1,7 +1,7 @@
 import pytest
+from rest_framework.test import APIClient
 
 from .factories import UserFactory
-from .common import DEFAULT_PASSWORD
 
 
 @pytest.mark.django_db
@@ -93,25 +93,19 @@ def test_user_delete_fail(admin_client):
 
 @pytest.mark.django_db
 def test_user_retrieve_me_success(customer):
-    from rest_framework.test import APIClient
-    from api.models import User
     client = APIClient()
     client.force_authenticate(user=customer)
-    print(f"Customer: {customer}")
-    print(f"Customer ID: {customer.id}")
-    print(f"User exists: {User.objects.filter(id=customer.id).exists()}")
     res = client.get('/api/users/me/')
-    print(res.data)
     assert res.status_code == 200
 
 @pytest.mark.django_db
 def test_user_retrieve_me_fail(client):
+    # not authenticated
     res = client.get('/api/users/me/')
     assert res.status_code == 401
     
 @pytest.mark.django_db
 def test_user_update_me_success(customer_client):
-    # FIXME: 404
     data = {
         'username': 'test',
         'password': 'test',
@@ -119,3 +113,23 @@ def test_user_update_me_success(customer_client):
     res = customer_client.put('/api/users/me/', data)
     assert res.status_code == 200
     assert res.data.get('username') == 'test'
+    
+@pytest.mark.django_db
+def test_user_update_me_fail(customer_client):
+    # missing field
+    data = {
+        'username': 'test'
+    }
+    res = customer_client.put('/api/users/me/', data)
+    assert res.status_code == 400
+
+@pytest.mark.django_db
+def test_user_delete_me_success(customer_client):
+    res = customer_client.delete('/api/users/me/')
+    assert res.status_code == 204
+    
+@pytest.mark.django_db
+def test_user_delete_me_fail(client):
+    # not authenticated
+    res = client.delete('/api/users/me/')
+    assert res.status_code == 401

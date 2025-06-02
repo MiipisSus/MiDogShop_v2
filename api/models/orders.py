@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class PaymentMethod(models.Model):
@@ -9,27 +10,27 @@ class PaymentMethod(models.Model):
         db_table = 'payment_methods'
 
 
-PENDING, PAID, SHIPPED, ARRIVED, COMPLETED, CANCELED = 'PENDING', 'PAID', 'SHIPPED', 'ARRIVED', 'COMPLETED', 'CANCELED'
-order_status = [
-    (PENDING, 'pending'),
-    (PAID, 'paid'),
-    (SHIPPED, 'shipped'),
-    (ARRIVED, 'arrived'),
-    (COMPLETED, 'completed'),
-    (CANCELED, 'canceled')
-]
-
-
 class Order(models.Model):
+    class OrderStatus(models.TextChoices):
+        PENDING = 'PENDING', _('待付款')
+        PAID = 'PAID', _('已付款')
+        SHIPPED = 'SHIPPED', _('已出貨')
+        ARRIVED = 'ARRIVED', _('已到貨')
+        COMPLETED = 'COMPLETED', _('已完成')
+        CANCELED = 'CANCELED', _('已取消')
+        
     customer = models.ForeignKey('api.User', on_delete=models.CASCADE)
     order_number = models.CharField(max_length=100, unique=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(
-        max_length=50, choices=order_status, default=order_status[0])
+        max_length=50, choices=OrderStatus.choices, default=OrderStatus.PENDING)
     payment_method = models.ForeignKey(
         PaymentMethod, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_status(self):
+        return self.OrderStatus(self.status)
 
     class Meta:
         db_table = 'orders'

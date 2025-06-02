@@ -5,7 +5,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from api.models import Order, OrderItem, OrderShipping, OrderAddressHome, ShippingMethod, PaymentMethod
 from api.serializers import ShippingMethodSerializer, PaymentMethodSerializer, OrderSerializer, OrderItemSerializer, OrderShippingSerializer, \
     OrderAddressHomeSerializer
-from api.permissions import IsStaff, IsManager
+from api.permissions import IsStaff, IsManager, IsAdminUserOrOwner
 from api.common import PERMMISIONS_DOCS
 
 
@@ -67,7 +67,9 @@ class OrderViewSet(ModelViewSet):
         return queryset.filter(customer=self.request.user)
     
     def get_permissions(self):
-            if self.request.method in (*SAFE_METHODS, 'POST'):
+            if self.request.method in SAFE_METHODS:
+                return [IsAuthenticated()]
+            elif self.request.method == 'POST':
                 return [IsAuthenticated()]
             return super().get_permissions()
     

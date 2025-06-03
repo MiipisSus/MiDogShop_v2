@@ -47,6 +47,10 @@ def manager_client(client, manager):
     return client
 
 @pytest.fixture
+def customer_address_home(customer):
+    return CustomerAddressHomeFactory(customer=customer)
+
+@pytest.fixture
 def product():
     return ProductFactory()
 

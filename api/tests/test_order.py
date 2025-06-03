@@ -1,6 +1,7 @@
 import pytest
 
 from api.models.orders import Order
+from .factories import UserFactory
 
 @pytest.mark.django_db
 def test_order_list(customer_client):
@@ -27,7 +28,8 @@ def test_order_create(client, customer):
     assert res.status_code == 201
     
 @pytest.mark.django_db
-def test_order_create_fail(customer_client, customer):
+def test_order_create_fail(customer_client):
+    customer = UserFactory(groups='Customer')
     data = {
         'customer_id': customer.pk,
         'order_number': 'test',
@@ -36,7 +38,7 @@ def test_order_create_fail(customer_client, customer):
         'payment_method': 1
     }
     res = customer_client.post('/api/orders/', data)
-    assert res.status_code == 403
+    assert res.status_code == 400
 
 @pytest.mark.django_db
 def test_order_update_success(staff_client, order):

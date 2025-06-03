@@ -133,3 +133,100 @@ def test_user_delete_me_fail(client):
     # not authenticated
     res = client.delete('/api/users/me/')
     assert res.status_code == 401
+    
+@pytest.mark.django_db
+def test_customer_address_home_list(customer_client):
+    res = customer_client.get('/api/customers-address-home/')
+    assert res.status_code == 200
+    
+@pytest.mark.django_db
+def test_customer_address_home_retrieve_success(client, customer_address_home):
+    client.force_authenticate(user=customer_address_home.customer)
+    res = client.get(f'/api/customers-address-home/{customer_address_home.pk}/')
+    assert res.status_code == 200
+
+@pytest.mark.django_db
+def test_customer_address_home_retrieve_fail(client, customer_address_home):
+    # no permission
+    user = UserFactory(groups='Customer')
+    client.force_authenticate(user=user)
+    res = client.get(f'/api/customers-address-home/{customer_address_home.pk}/')
+    assert res.status_code == 404
+
+@pytest.mark.django_db
+def test_customer_address_home_create_success(customer_client, customer):
+    data = {
+        'customer_id': customer.pk,
+        'recipient_name': 'test',
+        'phone': 'test',
+        'address': 'test',
+        'zip_code': 'test'
+    }
+    res = customer_client.post('/api/customers-address-home/', data)
+    assert res.status_code == 201
+
+@pytest.mark.django_db
+def test_customer_address_home_create_fail(customer_client):
+    user = UserFactory(groups='Customer')
+    data = {
+        'customer_id': user.pk,
+        'recipient_name': 'test',
+        'phone': 'test',
+        'address': 'test',
+        'zip_code': 'test'
+    }
+    res = customer_client.post('/api/customers-address-home/', data)
+    assert res.status_code == 400
+
+@pytest.mark.django_db
+def test_customer_address_home_update_success(customer_client, customer_address_home):
+    data = {
+        'customer_id': customer_address_home.customer.pk,
+        'recipient_name': 'test',
+        'phone': 'test',
+        'address': 'test',
+        'zip_code': 'test'
+    }
+    res = customer_client.put(f'/api/customers-address-home/{customer_address_home.pk}/', data)
+    assert res.status_code == 200
+    
+@pytest.mark.django_db
+def test_customer_address_home_update_fail(client, customer_address_home):
+    # no permission
+    user = UserFactory(groups='Customer')
+    client.force_authenticate(user=user)
+    data = {
+        'recipient_name': 'test',
+        'phone': 'test',
+        'address': 'test',
+        'zip_code': 'test'
+    }
+    res = client.put(f'/api/customers-address-home/{customer_address_home.pk}/', data)
+    assert res.status_code == 404
+
+@pytest.mark.django_db
+def test_customer_address_home_update_fail_2(customer_client, customer_address_home):
+    # no permission
+    user = UserFactory(groups='Customer')
+    data = {
+        'customer_id': user.pk,
+        'recipient_name': 'test',
+        'phone': 'test',
+        'address': 'test',
+        'zip_code': 'test'
+    }
+    res = customer_client.put(f'/api/customers-address-home/{customer_address_home.pk}/', data)
+    assert res.status_code == 400
+    
+@pytest.mark.django_db
+def test_customer_address_home_delete_success(customer_client, customer_address_home):
+    res = customer_client.delete(f'/api/customers-address-home/{customer_address_home.pk}/')
+    assert res.status_code == 204
+    
+@pytest.mark.django_db
+def test_customer_address_home_delete_fail(client, customer_address_home):
+    # no permission
+    user = UserFactory(groups='Customer')
+    client.force_authenticate(user=user)
+    res = client.delete(f'/api/customers-address-home/{customer_address_home.pk}/')
+    assert res.status_code == 404

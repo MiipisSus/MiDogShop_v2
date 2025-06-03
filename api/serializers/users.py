@@ -1,10 +1,10 @@
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework import serializers
 from django.contrib.auth.models import Group
 
 from api.models import User, CustomerAddressHome
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ['user_permissions', 'groups',
@@ -32,7 +32,20 @@ class UserSerializer(ModelSerializer):
         return instance
 
 
-class CustomerAddressHomeSerializer(ModelSerializer):
+class CustomerAddressHomeSerializer(serializers.ModelSerializer):
+    customer_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), source='customer', write_only=True
+    )
+    customer = UserSerializer(read_only=True)
+    
     class Meta:
         model = CustomerAddressHome
         fields = '__all__'
+    
+    def validate_customer_id(self, value):
+        request = self.context.get('request')
+        if not request.user.is_superuser:
+            if value != request.user:
+                raise serializers.ValidationError('You can only create your own address home.')
+        
+        return value

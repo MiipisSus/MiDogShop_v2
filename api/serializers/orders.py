@@ -44,6 +44,13 @@ class OrderShippingSerializer(serializers.ModelSerializer):
         model = OrderShipping
         exclude = ['shipping_method', 'order']
         
+    def validate_order_id(self, value):
+        request = self.context.get('request')
+        if not request.user.is_superuser:
+            if value.customer != request.user:
+                raise serializers.ValidationError('You can only access to your own order.')
+        return value
+        
 
 class OrderItemSerializer(serializers.ModelSerializer):
     order_id = serializers.PrimaryKeyRelatedField(
@@ -61,6 +68,13 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         exclude = ['product_variant', 'order']
+    
+    def validate_order_id(self, value):
+        request = self.context.get('request')
+        if not request.user.is_superuser:
+            if value.customer != request.user:
+                raise serializers.ValidationError('You can only access to your own order.')
+        return value
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -74,3 +88,10 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         exclude = ['customer']
+        
+    def validate_customer_id(self, value):
+        request = self.context.get('request')
+        if not request.user.is_superuser:
+            if value != request.user:
+                raise serializers.ValidationError('You can only access to your own order.')
+        return value

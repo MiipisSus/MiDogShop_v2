@@ -11,15 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-import os
-from dotenv import load_dotenv
 import dj_database_url
-
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -80,7 +76,7 @@ WSGI_APPLICATION = 'MiDogShop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = config('DATABASE_URL')
 
 if DATABASE_URL:
     # 使用 Fly.io 的資料庫
@@ -92,10 +88,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'your_local_db_name',
-            'USER': 'your_local_db_user',
-            'PASSWORD': 'your_local_db_password',
-            'HOST': 'localhost',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USERNAME'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST') if config('DB_HOST') else 'localhost',
             'PORT': '5432',
         }
     }
